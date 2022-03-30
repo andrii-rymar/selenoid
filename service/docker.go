@@ -22,7 +22,6 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/pkg/stdcopy"
 	"github.com/docker/go-connections/nat"
-	"github.com/docker/go-units"
 )
 
 const (
@@ -143,6 +142,7 @@ func (d *Docker) StartWithCancel() (*StartedService, error) {
 	}
 	cl := d.Client
 	env := getEnv(d.ServiceBase, d.Caps)
+	log.Printf("[%d] [ContainerCreate start]", requestId)
 	container, err := cl.ContainerCreate(ctx,
 		&ctr.Config{
 			Hostname:     getContainerHostname(d.Caps),
@@ -153,6 +153,7 @@ func (d *Docker) StartWithCancel() (*StartedService, error) {
 		},
 		&hostConfig,
 		&network.NetworkingConfig{}, "")
+	log.Printf("[%d] [ContainerCreate completed]", requestId)
 	if err != nil {
 		return nil, fmt.Errorf("create container: %v", err)
 	}
